@@ -25,11 +25,14 @@ export default class TMobile {
   private BearerAuthorizationCode: string;
   private subscriptionURL: string;
   private buyingCode: string;
+  public DEBUG: boolean;
 
   constructor(BASE_URI: string = "https://capi.odido.nl") {
     this.API_URI = BASE_URI;
     this.TMOBILE_MSISDN = process.env.MSISDN;
-    this.BearerAuthorizationCode = process.env.AUTHORIZATIONTOKEN
+    this.BearerAuthorizationCode = process.env.AUTHORIZATIONTOKEN;
+    this.DEBUG = process.env.DEBUG === 'true' || process.env.DEBUG === '1';
+    this.buyingCode = process.env.BUYINGCODE ?? 'A0DAY01';
   }
 
 
@@ -102,6 +105,35 @@ export default class TMobile {
     return subscriptionURL;
   }
 
+  public async getAvaibleRoamingBundles(): Promise<AvailableBundle[]> {
+    let bundles: AvailableBundle[];
+
+    const headers: Headers = makeHeaders(
+      Object.assign(this.DEFAULT_HEADERS, {
+        Authorization: `Bearer ${this.BearerAuthorizationCode}`,
+        Accept: "application/json",
+      })
+    );
+
+    const callback = async (response: Response) => {
+      const jsonResponse = await response.json();
+      bundles = jsonResponse.Bundles; // Bruh i really need to learn to apply an interface to api response
+      if (bundles != undefined) return true;
+      return false;
+    };
+
+    await fetchURI(
+      `${this.PERSONAL_API_URI}/availableroamingbundles`,
+      "GET",
+      headers,
+      "getAvaibleRoamingBundles",
+      undefined,
+      callback
+    );
+
+    return bundles;
+  }
+
   public async getMBsLeft(): Promise<number> {
     let buyingCodeTemp: string;
     let bundles: Bundle[];
@@ -140,7 +172,6 @@ export default class TMobile {
       }
     }
     // this.buyingCode = buyingCodeTemp;
-    this.buyingCode = 'A0DAY01';
     return Math.floor(MBsLeft);
   }
 
@@ -167,7 +198,7 @@ export default class TMobile {
       if (
         res.status != 202 &&
         res.statusText ==
-          "The provided buying code isn't available for purchase."
+        "The provided buying code isn't available for purchase."
       ) {
         console.log("Cannot already get new bundle");
       } else if (res.status == 202 && res.statusText == "Accepted") {

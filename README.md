@@ -20,6 +20,15 @@ To run this script, an authorization token is needed.
 Obtain the token using the **Odido Authenticator tool**:
 [Odido Authenticator latest Release](https://github.com/GuusBackup/Odido.Authenticator/releases/latest)
 
+## Buying Code
+The Buying code is stored in the environment variable `BUYINGCODE`, and by default, the value is set to `A0DAY01`, which is used for the `2 GB-aanvuller NL` bundle.
+
+To select a different bundle:
+1. First, enable DEBUG mode by setting `DEBUG=1`.
+2. Ensure that you've utilized at least 80% of the data in your current bundle.
+3. Next, review the available bundles in the logs to determine the correct bundle code.
+4. Once you've identified the desired bundle code, update the `BUYINGCODE` environment variable with the new code.
+
 ### Node.js with Yarn/NPM
 1. `git clone https://github.com/lodu/TMobile-NL-Unlimited-Bundle-Automated`
 2. `yarn` or `npm install`
@@ -28,6 +37,8 @@ Obtain the token using the **Odido Authenticator tool**:
       AUTHORIZATIONTOKEN=xxxxxxxxxx
       MSISDN=+3161234567890
       UPDATE_INTERVAL=5
+      BUYINGCODE=A0DAY01
+      DEBUG=0
       ```
 2.  `yarn build` or `npm run build`
 3.  `yarn start-daemon` or `npm run start-daemon`
@@ -40,6 +51,8 @@ Obtain the token using the **Odido Authenticator tool**:
       AUTHORIZATIONTOKEN=xxxxxxxxxx
       MSISDN=+3161234567890
       UPDATE_INTERVAL=5
+      BUYINGCODE=A0DAY01
+      DEBUG=0
       ```
 2. `docker pull ghcr.io/lodu/tmobile-nl-unlimited-bundle-automated:main`
 3. `docker run --env-file .env ghcr.io/lodu/tmobile-nl-unlimited-bundle-automated:main`
@@ -50,6 +63,8 @@ Obtain the token using the **Odido Authenticator tool**:
       AUTHORIZATIONTOKEN=xxxxxxxxxx
       MSISDN=+3161234567890
       UPDATE_INTERVAL=5
+      BUYINGCODE=A0DAY01
+      DEBUG=0
       ```
 2. copy [`docker-compose.yaml`](./docker-compose.yaml) to a local `docker-compose.yaml` file
 3. `docker-compose up -d`
@@ -61,6 +76,8 @@ Obtain the token using the **Odido Authenticator tool**:
    AUTHORIZATIONTOKEN=xxxxxxxxxx
    MSISDN=+3161234567890
    UPDATE_INTERVAL=5
+   BUYINGCODE=A0DAY01
+   DEBUG=0
    ```
 3. Install packages: `yarn` or `npm install`
 
