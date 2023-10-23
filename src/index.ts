@@ -15,7 +15,7 @@ const run = async () => {
     console.log(bundles);
   }
   console.log(`${MBsLeft} MB's left`);
-  if (MBsLeft < 2000) {
+  if (MBsLeft < 8000) {
     tmobile.requestBundle();
   }
 };
